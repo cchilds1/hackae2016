@@ -1,15 +1,24 @@
 package org.projectpost;
 
 import fi.iki.elonen.NanoHTTPD;
+import fi.iki.elonen.router.RouterNanoHTTPD;
+import freemarker.template.Configuration;
+import org.projectpost.pages.HomePage;
 
+import java.io.File;
 import java.io.IOException;
 
-public class Server extends NanoHTTPD {
+public class Server extends RouterNanoHTTPD {
 
     private final static int PORT = 8080;
+    public static Configuration config;
 
     public static void main(String[] args) {
         try {
+            config = new Configuration(Configuration.VERSION_2_3_25);
+
+            config.setDirectoryForTemplateLoading(new File("web"));
+
             Server s = new Server();
             s.start();
         } catch (IOException ioe) {
@@ -27,9 +36,9 @@ public class Server extends NanoHTTPD {
     }
 
     @Override
-    public Response serve(IHTTPSession session) {
-        return newFixedLengthResponse("Hello World!");
+    public void addMappings() {
+        super.addMappings();
+
+        addRoute("/", HomePage.class);
     }
-
-
 }
