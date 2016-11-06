@@ -66,7 +66,7 @@ public abstract class Page extends DefaultHandler {
     public abstract NanoHTTPD.Response postPage(UriResource uriResource, Map<String, String> formParams, UserSession session);
 
     private UserSession getUserSession(NanoHTTPD.IHTTPSession session) {
-        return new UserSession(null);
+        return new UserSession(null, session);
     }
 
     public String renderTemplate(String name, Map<String, Object> info) throws IOException, TemplateException {
