@@ -46,10 +46,9 @@ public class CreatePage extends Page {
             int location  = Integer.parseInt( req.getParameter("location") );
             String time = req.getParameter("time");
             String description = req.getParameter("description");
-            String image = req.getParameter("image");
             int maxFunds = Integer.parseInt( req.getParameter("maxFunds") );
 
-            if (name.equals("") || location == 0 || time.equals("") || image.equals("") || maxFunds <= 0) {
+            if (name.equals("") || location == 0 || time.equals("") || maxFunds <= 0) {
                 try {
                     Map<String, Object> errorMap = new HashMap<>();
                     errorMap.put("errorMessage", "Some fields were left blank!");
