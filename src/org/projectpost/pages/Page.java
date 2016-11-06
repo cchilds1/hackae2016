@@ -8,11 +8,14 @@ import fi.iki.elonen.NanoHTTPD.*;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.projectpost.Server;
+import org.projectpost.data.Database;
 import org.projectpost.sessions.UserSession;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,7 +69,16 @@ public abstract class Page extends DefaultHandler {
     public abstract NanoHTTPD.Response postPage(UriResource uriResource, Map<String, String> formParams, UserSession session);
 
     private UserSession getUserSession(NanoHTTPD.IHTTPSession session) {
-        return new UserSession(null, session);
+        String sessionID = session.getCookies().read("postSession");
+        if (sessionID.isEmpty()) {
+            return new UserSession(null, session);
+        }
+        String userID = null;
+        try {
+            userID = Database.getSessionUserUid(sessionID);
+        } catch (SQLException e) {
+        }
+        return new UserSession(userID, session);
     }
 
     public String renderTemplate(String name, Map<String, Object> info) throws IOException, TemplateException {

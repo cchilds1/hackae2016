@@ -314,5 +314,18 @@ public class Database {
         stmt.execute();
     }
 
+    public static String getSessionUserUid(String sessionID) throws SQLException {
+        String sql = "SELECT * FROM sessions WHERE uid=?";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setString(1, sessionID);
+        ResultSet rs = stmt.executeQuery();
+
+        if (!rs.next()) {
+            return null;
+        }
+
+        return rs.getString(1);
+    }
+
 }
 
