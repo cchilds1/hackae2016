@@ -22,24 +22,15 @@
       "./images/logo.png" ></a>
     </div>
   </nav><br><br>
-  <div class="container">
-      <div class="row">
-        <div class="col l6 s12">
-          <img src="data:image/png;base64,${imageData}">
-
-
-        </div>
-        <div class="col l6 s12">
-          <h5 class="red-text">${title} by ${ownerName}</h5>
-          <p> ${description}</p>
-        </div>
-      </div>
-    </div>
-    <center><a href="./volunteer.html" id="download-button" class="btn-large waves-effect waves-light red">Volunteer to this Project</a></center>
-    <br>
-    <center> <a href="./donate.html" id="download-button" class="btn-large waves-effect waves-light red">Donate to the Project</a></center>
-   <br></body>
-
+  <ul>
+  <!--#list items as item>
+    <#if item.isDonate>
+      <li>You received a donation from ${item.fromName} of ${item.amount}
+    </#if>
+    <#else> ${item.fromName} would like to vounteer for your project. They can be contacted at ${item.email} or ${item.phoneNumber}
+  <li>${projectName} 
+</#list--> 
+</ul>
 <footer class="page-footer orange accent-2">
     <div class="container">
       <div class="row">
