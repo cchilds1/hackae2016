@@ -5,27 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
   <title>Project Post</title>
   <!-- FAVICON -->
-  <link rel="shortcut icon" href="./images/fabicon.png" type="image/x-icon">
-  <link rel="icon" href="./images/fabicon.png" type="image/x-icon">
+  <link rel="shortcut icon" href="/images/fabicon.png" type="image/x-icon">
+  <link rel="icon" href="/images/fabicon.png" type="image/x-icon">
   <!-- CSS  -->
   
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="./css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-  <link href="./css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
 <body style="background-color:PeachPuff;">
   <nav class="orange accent-1" role="navigation" >
     <div class="nav-wrapper container"><a id="logo-container" href="/" class="brand-logo"><img src = 
-      "./images/logo.png" ></a>
+      "/images/logo.png" ></a>
       <!--Log In button -->
       <div class="right">
     <#if user??>
-  <a href="./create" id="download-button" class="btn-large waves-effect waves-light red">Start a Project</a>
-  <a href="./projects" id="download-button" class="btn-large waves-effect waves-light red">My Projects</a>
+  <a href="/create" id="download-button" class="btn-large waves-effect waves-light red">Start a Project</a>
+  <a href="/projects" id="download-button" class="btn-large waves-effect waves-light red">My Projects</a>
   <p> Welcome, ${user.name}!</p>
     <#else>
-    <a href="./login" id="download-button" class="btn-large waves-effect waves-light red">Log In</a>
-      <a href="./register" id="download-button" class="btn-large waves-effect waves-light red"> Register </a>
+    <a href="/login" id="download-button" class="btn-large waves-effect waves-light red">Log In</a>
+      <a href="/register" id="download-button" class="btn-large waves-effect waves-light red"> Register </a>
     </#if>
     </div>
     </div>
