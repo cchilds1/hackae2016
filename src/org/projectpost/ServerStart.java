@@ -43,11 +43,11 @@ public class ServerStart {
         handler.addServlet(CreatePage.class, "/create");
         handler.addServlet(CSSEndpoint.class, "/css/*");
         handler.addServlet(ImagesEndpoint.class, "/images/*");
-        handler.addServlet(ProjectDonatePage.class, "/project/donate");
-        handler.addServlet(ProjectManagePage.class, "/project/manage");
-        handler.addServlet(ProjectPage.class, "/project");
+        handler.addServlet(ProjectDonatePage.class, "/project/donate/");
+        handler.addServlet(ProjectManagePage.class, "/project/manage/");
+        handler.addServlet(ProjectPage.class, "/project/");
         handler.addServlet(ProjectsPage.class, "/projects");
-        handler.addServlet(ProjectVolunteerPage.class, "/project/volunteer");
+        handler.addServlet(ProjectVolunteerPage.class, "/project/volunteer/");
         handler.addServlet(RegisterPage.class, "/register");
 
         server.start();
