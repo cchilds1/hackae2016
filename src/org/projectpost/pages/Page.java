@@ -13,6 +13,7 @@ import org.projectpost.sessions.UserSession;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Page extends DefaultHandler {
@@ -43,11 +44,30 @@ public abstract class Page extends DefaultHandler {
 
     @Override
     public NanoHTTPD.Response get(RouterNanoHTTPD.UriResource uriResource, Map<String, String> urlParams, NanoHTTPD.IHTTPSession session) {
-        return getPage(uriResource, urlParams, null);
+        return getPage(uriResource, urlParams, getUserSession(session));
     }
 
     public abstract NanoHTTPD.Response getPage(RouterNanoHTTPD.UriResource uriResource, Map<String, String> urlParams, UserSession session);
 
+    @Override
+    public Response post(UriResource uriResource, Map<String, String> urlParams, IHTTPSession session) {
+        Map<String, String> formParams = new HashMap<>();
+        try {
+            session.parseBody(formParams);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ResponseException e) {
+            e.printStackTrace();
+        }
+
+        return getPage(uriResource, urlParams, getUserSession(session));
+    }
+
+    public abstract NanoHTTPD.Response postPage(UriResource uriResource, Map<String, String> formParams, UserSession session);
+
+    private UserSession getUserSession(NanoHTTPD.IHTTPSession session) {
+        return new UserSession(null);
+    }
 
     public String renderTemplate(String name, Map<String, Object> info) throws IOException, TemplateException {
         Template t = Server.config.getTemplate(name);
