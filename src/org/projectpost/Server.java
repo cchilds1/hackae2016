@@ -3,6 +3,8 @@ package org.projectpost;
 import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.router.RouterNanoHTTPD;
 import freemarker.template.Configuration;
+import org.projectpost.pages.HomePage;
+import org.projectpost.pages.LoginPage;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,5 +41,6 @@ public class Server extends RouterNanoHTTPD {
         super.addMappings();
 
         addRoute("/", HomePage.class);
+        addRoute("/login", LoginPage.class);
     }
 }
