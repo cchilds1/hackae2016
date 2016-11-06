@@ -191,7 +191,7 @@ public class Database {
     }
 
     public static void saveUserData(UserData ud) throws SQLException {
-        String sql = "INSERT OR REPLACE INTO projects VALUES (" +
+        String sql = "INSERT OR REPLACE INTO users VALUES (" +
                 "?, ?, ?, ?, ?, ?, ?" +
                 ")";
         PreparedStatement stmt = connection.prepareStatement(sql);
@@ -391,7 +391,7 @@ public class Database {
     }
 
     public static void savePostcardData(PostcardData pd) throws SQLException {
-        String sql = "INSERT OR REPLACE INTO projects VALUES (" +
+        String sql = "INSERT OR REPLACE INTO postcards VALUES (" +
                 "?, ?, ?" +
                 ")";
         PreparedStatement stmt = connection.prepareStatement(sql);
