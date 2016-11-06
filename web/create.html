@@ -19,12 +19,19 @@
   <form method="POST" action ="/politibate/login" class="container"><h1><center> Start a Project! </center></h1>
       <input type="hidden" name="mode" value="login">
         <table>
-            <tr> <td class="header center red-text">Name of Project</td><td ><input type="text" name="username" size="20" value="" placeholder="Username"></td> </tr>
-            <tr> <td class="header center red-text">Description</td><td><input type="password" name="password" size="20" value="" placeholder="Password"></td> </tr>
+            <tr> <td class="header center red-text">Name of Project</td><td ><input type="text" name="username" size="20" value="" placeholder="Name of Project"></td> </tr>
+            <tr> <td class="header center red-text">Description</td><td><input type="text" name="description" size="20" value="" placeholder="Description"></td> </tr>
+            <tr> <td class="header center red-text">Name of Owner</td><td><input type="text" name="owner" size="20" value="" placeholder="Name"></td> </tr>
+            <tr> <td class="header center red-text">Location</td><td><input type="text" name="location" size="20" value="" placeholder="Location"></td> </tr>
+            <tr> <td class="header center red-text">Time of Volunteering</td><td><input type="text" name="time" size="20" value="" placeholder="Time of Volunterring"></td> </tr>
+            <tr> <td class="header center red-text">Target Funds</td><td><input type="text" name="max" size="20" value="" placeholder="Target Funds"></td> </tr>
+            <tr> <td class="header center red-text">Current Funds</td><td><input type="text" name="current" size="20" value="" placeholder="Current Funds"></td> </tr>
+            <tr> <td class="header center red-text">Add a Photo</td><td><input type="file" name="photo" size="20" value="" placeholder="Photo"></td> </tr>
             <tr> <td class="header center red-text"><input type="submit" name="Submit" value="Login" class="btn-large waves-effect waves-light red"></td> </tr>
             </table></form>
    <br></body>
-
+    public String image;
+    public int currentFunds;
 <footer class="page-footer orange accent-2">
     <div class="container">
       <div class="row">
