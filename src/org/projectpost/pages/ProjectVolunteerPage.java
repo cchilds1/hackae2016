@@ -4,6 +4,7 @@ import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.router.RouterNanoHTTPD;
 import org.projectpost.data.Database;
 import org.projectpost.data.ProjectData;
+import org.projectpost.data.VolunteerData;
 import org.projectpost.sessions.UserSession;
 
 import java.util.HashMap;
@@ -25,6 +26,12 @@ public class ProjectVolunteerPage extends Page {
             volunteerMap.put("location",pd.location);
             volunteerMap.put("time", pd.time);
             String volunteerTemplate = renderTemplate("volunteer.html", volunteerMap);
+            VolunteerData vd = Database.newVolunteerData();
+            String username = urlParams.get("username");
+            String
+            vd.user = session.getUID();
+            vd.project = projectId;
+            Database.saveVolunteerData(vd);
             return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/html", volunteerTemplate);
         }
         catch(Exception e) {
