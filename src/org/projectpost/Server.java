@@ -3,7 +3,6 @@ package org.projectpost;
 import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.router.RouterNanoHTTPD;
 import freemarker.template.Configuration;
-import org.projectpost.pages.HomePage;
 
 import java.io.File;
 import java.io.IOException;

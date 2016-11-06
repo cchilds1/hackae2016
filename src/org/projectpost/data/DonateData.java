@@ -8,5 +8,5 @@ public class DonateData {
 
     public String user;
     public String project;
-    public int donateAmount;
+    public int amount;
 }

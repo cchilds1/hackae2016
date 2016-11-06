@@ -6,6 +6,6 @@ package org.projectpost.data;
 public class PostcardData {
     public String uid;
 
-    public String donation_id;
+    public int donation;
     public String message;
 }

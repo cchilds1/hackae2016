@@ -7,4 +7,5 @@ public class VolunteerData {
 
     public String uid;
     public String user;
-    public String project;}
+    public String project;
+}
