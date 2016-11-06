@@ -34,7 +34,11 @@
         <tr> <td class="header center red-text">Phone Number</td><td><input type="text" name="phonenumber" size="20" value=""></td> </tr>
         <tr> <td class="header center red-text">Zip Code</td><td><input type="text" name="address" size="20" value=""></td> </tr>
         <tr><td><input type="submit" name="Submit" value="Create!" class="btn-large waves-effect waves-light red"></td></tr>
-        </table></center></form><br></body>
+        </table></center></form>
+        <#if errorMessage??>
+              <p style="color:red">${errorMessage}</p>
+            </#if>
+            <br></body>
 
 <footer class="page-footer orange accent-2">
     <div class="container">
