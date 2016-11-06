@@ -43,8 +43,7 @@ public abstract class Page extends DefaultHandler {
 
     @Override
     public NanoHTTPD.Response get(RouterNanoHTTPD.UriResource uriResource, Map<String, String> urlParams, NanoHTTPD.IHTTPSession session) {
-        UserSession us = new UserSession(null);
-        return NanoHTTPD.newFixedLengthResponse(getPage(uriResource, urlParams, us));
+        return NanoHTTPD.newFixedLengthResponse(getPage(uriResource, urlParams, null));
     }
 
     public abstract String getPage(RouterNanoHTTPD.UriResource uriResource, Map<String, String> urlParams, UserSession session);
@@ -55,5 +54,11 @@ public abstract class Page extends DefaultHandler {
         t.process(info, sw);
 
         return sw.toString();
+    }
+
+    public NanoHTTPD.Response newRedirectResponse(String redirectTo) {
+        Response r = NanoHTTPD.newFixedLengthResponse(Response.Status.REDIRECT_SEE_OTHER, "text/html", "");
+        r.addHeader("Location", redirectTo);
+        return r;
     }
 }
