@@ -1,32 +1,36 @@
 package org.projectpost.pages;
 
-import fi.iki.elonen.NanoHTTPD;
-import fi.iki.elonen.router.RouterNanoHTTPD;
-import freemarker.ext.beans.HashAdapter;
 import org.projectpost.data.*;
 import org.projectpost.sessions.UserSession;
 
-import javax.xml.crypto.Data;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ProjectManagePage extends Page {
+
     @Override
-    public NanoHTTPD.Response getPage(RouterNanoHTTPD.UriResource uriResource, Map<String, String> urlParams, UserSession session) {
+    public void getPage(HttpServletRequest req, HttpServletResponse resp, UserSession session) throws ServletException, IOException {
         try {
             if (!session.isLoggedIn()) {
-                return newRedirectResponse("/");
+                resp.sendRedirect("/");
+                return;
             }
 
-            ProjectData pd = Database.getProjectData(urlParams.get("id"));
+            ProjectData pd = Database.getProjectData(req.getParameter("id"));
             if (pd == null) {
-                return newRedirectResponse("/");
+                resp.sendRedirect("/");
+                return;
             }
 
             if (!session.getUID().equals(pd.owner)) {
-                return newRedirectResponse("/");
+                resp.sendRedirect("/");
+                return;
             }
 
             List<VolunteerData> volunteerDatas = Database.getVolunteerDataForProject(pd.uid);
@@ -57,32 +61,34 @@ public class ProjectManagePage extends Page {
 
             templateMap.put("items", items);
             templateMap.put("projectUID", pd.uid);
-            String template = renderTemplate("manage.html", templateMap);
-            return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/html", template);
+            renderTemplate("manage.html", templateMap, resp.getWriter());
         } catch (Exception e) {
-            return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.INTERNAL_ERROR, "text/plain", "failed to read template");
+            sendError(resp, "failed to read template");
         }
     }
 
     @Override
-    public NanoHTTPD.Response postPage(RouterNanoHTTPD.UriResource uriResource, Map<String, String> formParams, UserSession session) {
+    public void postPage(HttpServletRequest req, HttpServletResponse resp, UserSession session) throws ServletException, IOException {
         try {
             if (!session.isLoggedIn()) {
-                return newRedirectResponse("/");
+                resp.sendRedirect("/");
+                return;
             }
 
-            ProjectData pd = Database.getProjectData(formParams.get("projectUID"));
+            ProjectData pd = Database.getProjectData(req.getParameter("pid"));
             if (pd == null) {
-                return newRedirectResponse("/");
+                resp.sendRedirect("/");
+                return;
             }
 
             if (!session.getUID().equals(pd.owner)) {
-                return newRedirectResponse("/");
+                resp.sendRedirect("/");
+                return;
             }
 
-            DonateData dd = Database.getDonateData(formParams.get("donationUID"));
+            DonateData dd = Database.getDonateData(req.getParameter("donationUID"));
 
-            String message = formParams.get("message");
+            String message = req.getParameter("message");
 
             PostcardData pod = Database.newPostcardData();
             pod.toUser = dd.user;
@@ -91,9 +97,9 @@ public class ProjectManagePage extends Page {
             pod.message = message;
             Database.savePostcardData(pod);
 
-            return newRedirectResponse("/");
+            resp.sendRedirect("/");
         } catch (Exception e) {
-            return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.INTERNAL_ERROR, "text/plain", "failed to read template");
+            sendError(resp, "failed to read template");
         }
     }
 }

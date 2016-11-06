@@ -1,97 +1,78 @@
 package org.projectpost.pages;
 
 
-import fi.iki.elonen.NanoHTTPD;
-import fi.iki.elonen.router.RouterNanoHTTPD;
-import fi.iki.elonen.router.RouterNanoHTTPD.*;
-import fi.iki.elonen.NanoHTTPD.*;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import org.projectpost.Server;
+import org.eclipse.jetty.http.HttpStatus;
+import org.projectpost.ServerStart;
 import org.projectpost.data.Database;
 import org.projectpost.sessions.UserSession;
 
-import javax.xml.crypto.Data;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
+import java.io.Writer;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Map;
 
-public abstract class Page extends DefaultHandler {
-
-    public Page() {
-        super();
-    }
+public abstract class Page extends HttpServlet {
 
     @Override
-    public String getMimeType() {
-        return "text/html";
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        getPage(req, resp, getUserSession(req));
     }
+
+    public abstract void getPage(HttpServletRequest req, HttpServletResponse resp, UserSession session) throws ServletException, IOException;
 
     @Override
-    public InputStream getData() {
-        return super.getData();
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        postPage(req, resp, getUserSession(req));
     }
 
-    @Override
-    public String getText() {
-        return "";
-    }
+    public abstract void postPage(HttpServletRequest req, HttpServletResponse resp, UserSession session) throws ServletException, IOException;
 
-    @Override
-    public Response.IStatus getStatus() {
-        return Response.Status.OK;
-    }
-
-    @Override
-    public NanoHTTPD.Response get(RouterNanoHTTPD.UriResource uriResource, Map<String, String> urlParams, NanoHTTPD.IHTTPSession session) {
-        return getPage(uriResource, urlParams, getUserSession(session));
-    }
-
-    public abstract NanoHTTPD.Response getPage(RouterNanoHTTPD.UriResource uriResource, Map<String, String> urlParams, UserSession session);
-
-    @Override
-    public Response post(UriResource uriResource, Map<String, String> urlParams, IHTTPSession session) {
-        Map<String, String> formParams = new HashMap<>();
-        try {
-            session.parseBody(formParams);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ResponseException e) {
-            e.printStackTrace();
-        }
-
-        return getPage(uriResource, formParams, getUserSession(session));
-    }
-
-    public abstract NanoHTTPD.Response postPage(UriResource uriResource, Map<String, String> formParams, UserSession session);
-
-    private UserSession getUserSession(NanoHTTPD.IHTTPSession session) {
-        String sessionID = session.getCookies().read("postSession");
+    private UserSession getUserSession(HttpServletRequest req) {
+        String sessionID = getCookieValue(req, "postSession");
         if (sessionID.isEmpty()) {
-            return new UserSession(null, session);
+            return new UserSession(null);
         }
         String userID = null;
         try {
             userID = Database.getSessionUserUid(sessionID);
         } catch (SQLException e) {
         }
-        return new UserSession(userID, session);
+        return new UserSession(userID);
     }
 
-    public String renderTemplate(String name, Map<String, Object> info) throws IOException, TemplateException {
-        Template t = Server.config.getTemplate(name);
-        StringWriter sw = new StringWriter();
-        t.process(info, sw);
+    public String getCookieValue(HttpServletRequest req, String c) {
+        if (req.getCookies() == null) {
+            return "";
+        }
+        for (Cookie cookie : req.getCookies()) {
+            if (cookie.getName().equals(c)) {
+                return cookie.getValue();
+            }
+        }
 
-        return sw.toString();
+        return "";
     }
 
-    public NanoHTTPD.Response newRedirectResponse(String redirectTo) {
-        Response r = NanoHTTPD.newFixedLengthResponse(Response.Status.REDIRECT_SEE_OTHER, "text/html", "");
-        r.addHeader("Location", redirectTo);
-        return r;
+    public void setCookieValue(HttpServletResponse resp, String cn, String cv, int expires) {
+        Cookie c = new Cookie(cn, cv);
+        c.setMaxAge(expires);
+        resp.addCookie(c);
+    }
+
+    public void renderTemplate(String name, Map<String, Object> info, Writer out) throws IOException, TemplateException {
+        Template t = ServerStart.config.getTemplate(name);
+        t.process(info, out);
+    }
+
+    public void sendError(HttpServletResponse resp, String message) throws IOException {
+        resp.setStatus(HttpStatus.INTERNAL_SERVER_ERROR_500);
+        resp.getWriter().print(message);
     }
 }

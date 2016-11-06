@@ -1,64 +1,64 @@
 package org.projectpost.pages;
 
-import fi.iki.elonen.NanoHTTPD;
-import fi.iki.elonen.router.RouterNanoHTTPD;
 import freemarker.template.TemplateException;
 import org.projectpost.data.Database;
 import org.projectpost.data.UserData;
 import org.projectpost.sessions.UserSession;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Claire on 11/5/2016.
- */
+
 public class RegisterPage extends Page {
+
     @Override
-    public NanoHTTPD.Response getPage(RouterNanoHTTPD.UriResource uriResource, Map<String, String> urlParams, UserSession session) {
-        if (session.isLoggedIn())
-            return newRedirectResponse("/");
+    public void getPage(HttpServletRequest req, HttpServletResponse resp, UserSession session) throws ServletException, IOException {
+        if (session.isLoggedIn()) {
+            resp.sendRedirect("/");
+            return;
+        }
+
         try {
-            String registerTemplate = renderTemplate("register.html", new HashMap<>());
-            return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/html", registerTemplate);
+            renderTemplate("register.html", new HashMap<>(), resp.getWriter());
         } catch (IOException | TemplateException e) {
-            return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.INTERNAL_ERROR, "text/plain", "failed to read template");
+            sendError(resp, "failed to read template");
         }
     }
 
     @Override
-    public NanoHTTPD.Response postPage(RouterNanoHTTPD.UriResource uriResource, Map<String, String> formParams, UserSession session) {
-        if (session.isLoggedIn())
-            return newRedirectResponse("/");
+    public void postPage(HttpServletRequest req, HttpServletResponse resp, UserSession session) throws ServletException, IOException {
+        if (session.isLoggedIn()) {
+            resp.sendRedirect("/");
+            return;
+        }
+
         try {
-            String registerTemplate = renderTemplate("register.html", new HashMap<>());
-            //return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/html", registerTemplate);
+            String username = req.getParameter("username");
+            String password = req.getParameter("password");
+            String rpassword = req.getParameter("rpassword");
+            String email = req.getParameter("email");
+            String phonenumber = req.getParameter("phonenumber");
+            String zipcode = req.getParameter("zipcode");
+            String name = req.getParameter("name");
 
 
-            String username = formParams.get("username");
-            String password = formParams.get("password");
-            String rpassword = formParams.get("rpassword");
-            String email = formParams.get("email");
-            String phonenumber = formParams.get("phonenumber");
-            String zipcode = formParams.get("zipcode");
-            String name = formParams.get("name");
-
-
-            if (username.equals("") || password.equals("") || rpassword.equals("") || email.equals("") || phonenumber.equals("")
-                    || zipcode.equals("") || name.equals(""))
-
-            {
-                return errMap("Fill out all fields");
+            if (username.equals("") || password.equals("") || rpassword.equals("") || email.equals("") || phonenumber.equals("") || zipcode.equals("") || name.equals("")) {
+                errMap(resp, "Fill out all fields");
+                return;
             }
             if (!(password.equals(rpassword))) {
-                return errMap("Passwords do not match");
+                errMap(resp, "Passwords do not match");
+                return;
             }
 
             if (Database.userExists(username)) {
-                return errMap("Username already taken");
+                errMap(resp, "Username already taken");
+                return;
             }
             UserData ud = Database.newUserData();
             ud.name = name;
@@ -69,30 +69,20 @@ public class RegisterPage extends Page {
             MessageDigest md = MessageDigest.getInstance("MD5");
             ud.passhash = new String(md.digest(password.getBytes()));
             Database.saveUserData(ud);
-            return newRedirectResponse("/");
-        } catch (
-                Exception e)
 
-        {
-            return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.INTERNAL_ERROR, "text/plain", "failed to read template");
-
-
+            resp.sendRedirect("/");
+        } catch (Exception e) {
+            sendError(resp, "failed to read template");
         }
-
-
-
     }
 
-
-
-    public NanoHTTPD.Response errMap(String errorMes) {
+    public void errMap(HttpServletResponse resp, String errorMes) throws IOException {
         try {
             Map<String, Object> errorMap = new HashMap();
             errorMap.put("errorMessage", errorMes);
-            String registerTemplate1 = renderTemplate("register.html", errorMap);
-            return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/html", registerTemplate1);
+            renderTemplate("register.html", errorMap, resp.getWriter());
         } catch (IOException | TemplateException e) {
-            return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.INTERNAL_ERROR, "text/plain", "failed to read template");
+            sendError(resp, "failed to read template");
         }
 
     }

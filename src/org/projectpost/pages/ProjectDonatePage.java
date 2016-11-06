@@ -1,45 +1,51 @@
 package org.projectpost.pages;
 
-import fi.iki.elonen.NanoHTTPD;
-import fi.iki.elonen.router.RouterNanoHTTPD;
+import org.eclipse.jetty.http.HttpStatus;
 import org.projectpost.data.Database;
 import org.projectpost.data.DonateData;
 import org.projectpost.data.ProjectData;
-import org.projectpost.data.UserData;
 import org.projectpost.sessions.UserSession;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ProjectDonatePage extends Page {
+
     @Override
-    public NanoHTTPD.Response getPage(RouterNanoHTTPD.UriResource uriResource, Map<String, String> urlParams, UserSession session) {
+    public void getPage(HttpServletRequest req, HttpServletResponse resp, UserSession session) throws ServletException, IOException {
         try {
             if (!session.isLoggedIn()) {
-                return newRedirectResponse("/");
+                resp.sendRedirect("/");
+                return;
             }
-            String projectId = urlParams.get("id");
+            String projectId = req.getParameter("pid");
             ProjectData pd = Database.getProjectData(projectId);
             if (pd == null){
-                return newRedirectResponse("/");
+                resp.sendRedirect("/");
+                return;
             }
-            Map<String, Object> donateMap = new HashMap<>();
-            donateMap.put("title",pd.name);// if we have time add the amount
-            donateMap.put("imageData",pd.image);
-            String donateTemplate = renderTemplate("donate.html", donateMap);
+
             DonateData dd = Database.newDonateData();
             dd.user = session.getUID();
             dd.project = projectId;
             dd.amount = 0;//later if possible
             Database.saveDonateData(dd);
-            return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/html", donateTemplate);
+
+            Map<String, Object> donateMap = new HashMap<>();
+            donateMap.put("title",pd.name);// if we have time add the amount
+            donateMap.put("imageData",pd.image);
+            renderTemplate("donate.html", donateMap, resp.getWriter());
         } catch (Exception e) {
-            return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.INTERNAL_ERROR, "text/plain", "failed to read template");
+            sendError(resp, "failed to read template");
         }
     }
 
     @Override
-    public NanoHTTPD.Response postPage(RouterNanoHTTPD.UriResource uriResource, Map<String, String> formParams, UserSession session) {
-        return null;
+    public void postPage(HttpServletRequest req, HttpServletResponse resp, UserSession session) throws ServletException, IOException {
+        resp.setStatus(HttpStatus.NOT_FOUND_404);
     }
 }

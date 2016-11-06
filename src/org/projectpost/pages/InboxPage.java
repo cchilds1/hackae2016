@@ -1,28 +1,30 @@
 package org.projectpost.pages;
 
-import fi.iki.elonen.NanoHTTPD;
-import fi.iki.elonen.router.RouterNanoHTTPD;
+import org.eclipse.jetty.http.HttpStatus;
 import org.projectpost.data.Database;
 import org.projectpost.data.PostcardData;
 import org.projectpost.sessions.UserSession;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by ddnaiman1 on 11/6/16.
- */
+
 public class InboxPage extends Page {
-    //an arraylist inside a map of all the postcards that a volunteer has ever received
 
-    public NanoHTTPD.Response getPage(RouterNanoHTTPD.UriResource uriResource, Map<String, String> urlParams, UserSession session) {
-
+    @Override
+    public void getPage(HttpServletRequest req, HttpServletResponse resp, UserSession session) throws ServletException, IOException {
         try {
             if (!session.isLoggedIn()) {
-                return newRedirectResponse("/");
+                resp.sendRedirect("/");
+                return;
             }
+
             Map<String, Object> inboxMap = new HashMap<>();
             List<Map<String, Object>> list = new ArrayList<>();
             List<PostcardData> postcards = Database.getPostcardsForUser(session.getUID());
@@ -35,15 +37,14 @@ public class InboxPage extends Page {
                 list.add(postcardMap);
             }
             inboxMap.put("postcards",list);
-            String inboxTemplate = renderTemplate("inbox.html", inboxMap);
-            return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/html", inboxTemplate);
+            renderTemplate("inbox.html", inboxMap, resp.getWriter());
         } catch (Exception e) {
-            return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.INTERNAL_ERROR, "text/plain", "failed to read template");
+            sendError(resp, "failed to read template");
         }
     }
 
     @Override
-    public NanoHTTPD.Response postPage(RouterNanoHTTPD.UriResource uriResource, Map<String, String> formParams, UserSession session) {
-        return null;
+    public void postPage(HttpServletRequest req, HttpServletResponse resp, UserSession session) throws ServletException, IOException {
+        resp.setStatus(HttpStatus.NOT_FOUND_404);
     }
 }

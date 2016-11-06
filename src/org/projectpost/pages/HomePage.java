@@ -1,27 +1,24 @@
 package org.projectpost.pages;
 
-import fi.iki.elonen.NanoHTTPD;
-import fi.iki.elonen.router.RouterNanoHTTPD;
-import freemarker.ext.util.IdentityHashMap;
 import freemarker.template.TemplateException;
+import org.eclipse.jetty.http.HttpStatus;
 import org.projectpost.data.Database;
 import org.projectpost.data.UserData;
 import org.projectpost.sessions.UserSession;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
-import static org.projectpost.data.Database.getUserData;
 
-/**
- * Created by ddnaiman1 on 11/5/16.
- */
 public class HomePage extends Page {
-    public NanoHTTPD.Response getPage(RouterNanoHTTPD.UriResource uriResource, Map<String, String> urlParams, UserSession session) {
 
+    @Override
+    public void getPage(HttpServletRequest req, HttpServletResponse resp, UserSession session) throws ServletException, IOException {
         try {
             Map<String, Object> homeMap = new HashMap<>();
             if (session.isLoggedIn()) {
@@ -33,18 +30,15 @@ public class HomePage extends Page {
                 });
             }
 
-            String homeTemplate = renderTemplate("Home.html", homeMap);
-            return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/html", homeTemplate);
+            renderTemplate("Home.html", homeMap, resp.getWriter());
         } catch (IOException | TemplateException | SQLException e) {
-            return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.INTERNAL_ERROR, "text/plain", "failed to read template");
-
+            sendError(resp, "Internal error: " + e.getMessage());
         }
-
 
     }
 
     @Override
-    public NanoHTTPD.Response postPage(RouterNanoHTTPD.UriResource uriResource, Map<String, String> formParams, UserSession session) {
-        return null;
+    public void postPage(HttpServletRequest req, HttpServletResponse resp, UserSession session) throws ServletException, IOException {
+        resp.setStatus(HttpStatus.NOT_FOUND_404);
     }
 }
