@@ -2,3 +2,4 @@
 out/
 *.iml
 web/projectpost.db
+meta/
