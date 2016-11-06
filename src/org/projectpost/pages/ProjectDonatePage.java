@@ -3,7 +3,9 @@ package org.projectpost.pages;
 import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.router.RouterNanoHTTPD;
 import org.projectpost.data.Database;
+import org.projectpost.data.DonateData;
 import org.projectpost.data.ProjectData;
+import org.projectpost.data.UserData;
 import org.projectpost.sessions.UserSession;
 
 import java.util.HashMap;
@@ -25,6 +27,11 @@ public class ProjectDonatePage extends Page {
             donateMap.put("projectName",pd.name);// if we have time add the amount
             donateMap.put("imageData",pd.image);
             String donateTemplate = renderTemplate("donate.html", donateMap);
+            DonateData dd = Database.newDonateData();
+            dd.project = projectId;
+            dd.user = session.getUID();
+            dd.amount = 0;//later if possible
+            Database.saveDonateData(dd);
             return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/html", donateTemplate);
         } catch (Exception e) {
             return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.INTERNAL_ERROR, "text/plain", "failed to read template");
