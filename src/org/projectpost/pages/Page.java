@@ -25,19 +25,11 @@ public abstract class Page extends HttpServlet {
         getPage(req, resp, getUserSession(req));
     }
 
-    public void doGetYeah(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doGet(req, resp);
-    }
-
     public abstract void getPage(HttpServletRequest req, HttpServletResponse resp, UserSession session) throws ServletException, IOException;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         postPage(req, resp, getUserSession(req));
-    }
-
-    public void doPostYeah(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doPost(req, resp);
     }
 
     public abstract void postPage(HttpServletRequest req, HttpServletResponse resp, UserSession session) throws ServletException, IOException;
