@@ -23,6 +23,7 @@ public class ProjectDonatePage extends Page {
             }
             Map<String, Object> donateMap = new HashMap<>();
             donateMap.put("projectName",pd.name);// if we have time add the amount
+            donateMap.put("imageData",pd.image);
             String donateTemplate = renderTemplate("donate.html", donateMap);
             return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/html", donateTemplate);
         } catch (Exception e) {
