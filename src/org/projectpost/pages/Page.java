@@ -63,7 +63,7 @@ public abstract class Page extends DefaultHandler {
             e.printStackTrace();
         }
 
-        return getPage(uriResource, urlParams, getUserSession(session));
+        return getPage(uriResource, formParams, getUserSession(session));
     }
 
     public abstract NanoHTTPD.Response postPage(UriResource uriResource, Map<String, String> formParams, UserSession session);

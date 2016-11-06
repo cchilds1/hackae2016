@@ -18,7 +18,7 @@ public class Database {
         connection = DriverManager.getConnection(DATABASE_URL);
 
         execute("CREATE TABLE IF NONE EXISTS projects (" +
-                "uid char(36) PRIMARY KEY NOT NULL," +
+                "uid char(32) PRIMARY KEY NOT NULL," +
                 "name text NOT NULL," +
                 "location int NOT NULL," +
                 "time text NOT NULL," +
@@ -31,7 +31,7 @@ public class Database {
 
 
         execute("CREATE TABLE IF NOT EXISTS users (" +
-                "uid char(36) PRIMARY KEY NOT NULL," +
+                "uid char(32) PRIMARY KEY NOT NULL," +
                 "name text NOT NULL," +
                 "username text NOT NULL," +
                 "passhash text NOT NULL," +
@@ -42,32 +42,32 @@ public class Database {
         );
 
         execute("CREATE TABLE IF NOT EXISTS volunteerPosts (" +
-                "uid char(36) PRIMARY KEY NOT NULL," +
-                "user char(36) NOT NULL," +
-                "project char(36) NOT NULL," +
+                "uid char(32) PRIMARY KEY NOT NULL," +
+                "user char(32) NOT NULL," +
+                "project char(32) NOT NULL," +
                 ")"
         );
 
         execute("CREATE TABLE IF NOT EXISTS donatePosts (" +
-                "uid char(36) PRIMARY KEY NOT NULL," +
-                "user char(36) NOT NULL," +
-                "project char(36) NOT NULL," +
+                "uid char(32) PRIMARY KEY NOT NULL," +
+                "user char(32) NOT NULL," +
+                "project char(32) NOT NULL," +
                 "amount int NOT NULL," +
                 ")"
         );
 
         execute("CREATE TABLE IF NOT EXISTS postcards (" +
-                "uid char(36) PRIMARY KEY NOT NULL," +
-                "fromUser char(36) NOT NULL," +
-                "toUser char(36) NOT NULL," +
-                "project char(36) NOT NULL," +
-                "message char(36) NOT NULL," +
+                "uid char(32) PRIMARY KEY NOT NULL," +
+                "fromUser char(32) NOT NULL," +
+                "toUser char(32) NOT NULL," +
+                "project char(32) NOT NULL," +
+                "message char(32) NOT NULL," +
                 ")"
         );
 
         execute("CREATE TABLE IF NOT EXISTS sessions (" +
                 "uid char(32) PRIMARY KEY NOT NULL," +
-                "user char(36) NOT NULL," +
+                "user char(32) NOT NULL," +
                 ")"
         );
     }
@@ -78,7 +78,7 @@ public class Database {
     }
 
     private static String genUID() {
-        return UUID.randomUUID().toString();
+        return UUID.randomUUID().toString().replaceAll("/", "");
     }
 
     public static ProjectData newProjectData() {
@@ -92,7 +92,10 @@ public class Database {
         PreparedStatement stmt = connection.prepareStatement(sql);
         stmt.setString(1, uid);
         ResultSet rs = stmt.executeQuery();
-        rs.next();
+
+        if (!rs.next()) {
+            return null;
+        }
 
         ProjectData pd = new ProjectData();
         pd.uid = rs.getString(1);
@@ -168,7 +171,10 @@ public class Database {
         PreparedStatement stmt = connection.prepareStatement(sql);
         stmt.setString(1, uid);
         ResultSet rs = stmt.executeQuery();
-        rs.next();
+
+        if (!rs.next()) {
+            return null;
+        }
 
         UserData ud = new UserData();
         ud.uid = rs.getString(1);
@@ -250,7 +256,10 @@ public class Database {
         PreparedStatement stmt = connection.prepareStatement(sql);
         stmt.setString(1, uid);
         ResultSet rs = stmt.executeQuery();
-        rs.next();
+
+        if (!rs.next()) {
+            return null;
+        }
 
         VolunteerData vd = new VolunteerData();
         vd.uid = rs.getString(1);
@@ -263,7 +272,7 @@ public class Database {
     }
 
     public static void saveVolunteerData(VolunteerData vd) throws SQLException {
-        String sql = "INSERT OR REPLACE INTO projects VALUES (" +
+        String sql = "INSERT OR REPLACE INTO volunteerPosts VALUES (" +
                 "?, ?, ?" +
                 ")";
         PreparedStatement stmt = connection.prepareStatement(sql);
@@ -273,6 +282,24 @@ public class Database {
         stmt.execute();
     }
 
+    public static List<VolunteerData> getVolunteerDataForProject(String pid) throws SQLException {
+        String sql = "SELECT * FROM volunteerPosts WHERE project = ?";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setString(1, pid);
+        ResultSet rs = stmt.executeQuery();
+
+        List<VolunteerData> volunteerDatas = new ArrayList<>();
+
+        while (rs.next()) {
+            VolunteerData vd = new VolunteerData();
+            vd.uid = rs.getString(1);
+            vd.user = rs.getString(2);
+            vd.project = rs.getString(3);
+            volunteerDatas.add(vd);
+        }
+
+        return volunteerDatas;
+    }
 
 
     public static DonateData newDonateData() {
@@ -286,7 +313,10 @@ public class Database {
         PreparedStatement stmt = connection.prepareStatement(sql);
         stmt.setString(1, uid);
         ResultSet rs = stmt.executeQuery();
-        rs.next();
+
+        if (!rs.next()) {
+            return null;
+        }
 
         DonateData dd = new DonateData();
         dd.uid = rs.getString(1);
@@ -300,7 +330,7 @@ public class Database {
     }
 
     public static void saveDonateData(DonateData dd) throws SQLException {
-        String sql = "INSERT OR REPLACE INTO projects VALUES (" +
+        String sql = "INSERT OR REPLACE INTO donatePosts VALUES (" +
                 "?, ?, ?, ?" +
                 ")";
         PreparedStatement stmt = connection.prepareStatement(sql);
@@ -309,6 +339,25 @@ public class Database {
         stmt.setString(3, dd.project);
         stmt.setInt(4, dd.amount);
         stmt.execute();
+    }
+
+    public static List<DonateData> getDonateDataForProject(String pid) throws SQLException {
+        String sql = "SELECT * FROM donatePosts WHERE project = ?";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setString(1, pid);
+        ResultSet rs = stmt.executeQuery();
+
+        List<DonateData> donateDatas = new ArrayList<>();
+
+        while (rs.next()) {
+            DonateData dd = new DonateData();
+            dd.uid = rs.getString(1);
+            dd.user = rs.getString(2);
+            dd.project = rs.getString(3);
+            dd.amount = rs.getInt(4);
+        }
+
+        return donateDatas;
     }
 
 
@@ -324,7 +373,10 @@ public class Database {
         PreparedStatement stmt = connection.prepareStatement(sql);
         stmt.setString(1, uid);
         ResultSet rs = stmt.executeQuery();
-        rs.next();
+
+        if (rs.next()) {
+            return null;
+        }
 
         PostcardData pd = new PostcardData();
         pd.uid = rs.getString(1);
@@ -383,7 +435,6 @@ public class Database {
                 ")";
 
         String newUID = genUID();
-        newUID = newUID.replaceAll("-", "");
 
         PreparedStatement stmt = connection.prepareStatement(sql);
         stmt.setString(1, newUID);
