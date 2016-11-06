@@ -17,16 +17,20 @@ public class ProjectManagePage extends Page {
     @Override
     public void getPage(HttpServletRequest req, HttpServletResponse resp, UserSession session) throws ServletException, IOException {
         try {
+            System.out.println(session.isLoggedIn());
+
             if (!session.isLoggedIn()) {
                 resp.sendRedirect("/");
                 return;
             }
 
-            ProjectData pd = Database.getProjectData(req.getParameter("id"));
+            ProjectData pd = Database.getProjectData(req.getParameter("pid"));
+            System.out.println(pd.name);
             if (pd == null) {
                 resp.sendRedirect("/");
                 return;
             }
+            System.out.println(pd.owner + ", " + session.getUID());
             if (!session.getUID().equals(pd.owner)) {
                 resp.sendRedirect("/");
                 return;

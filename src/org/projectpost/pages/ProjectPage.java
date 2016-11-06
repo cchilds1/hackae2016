@@ -31,7 +31,6 @@ public class ProjectPage extends Page {
             projectMap.put("title", pd.name);
             UserData ud = Database.getUserData(pd.owner);
             projectMap.put("owner", ud.name);
-            projectMap.put("imageData", pd.image);
             projectMap.put("description", pd.description);
             projectMap.put("pid", pd.uid);
             renderTemplate("project.html", projectMap, resp.getWriter());

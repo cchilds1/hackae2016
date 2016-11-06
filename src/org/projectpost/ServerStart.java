@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class ServerStart {
 
-    private final static int PORT = 80;
+    private final static int PORT = 8080;
     public static Configuration config;
 
     public static void main(String[] args) {

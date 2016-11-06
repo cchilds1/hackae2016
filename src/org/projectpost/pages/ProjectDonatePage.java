@@ -37,7 +37,6 @@ public class ProjectDonatePage extends Page {
 
             Map<String, Object> donateMap = new HashMap<>();
             donateMap.put("title",pd.name);// if we have time add the amount
-            donateMap.put("imageData",pd.image);
             renderTemplate("donate.html", donateMap, resp.getWriter());
         } catch (Exception e) {
             sendError(resp, "failed to read template");

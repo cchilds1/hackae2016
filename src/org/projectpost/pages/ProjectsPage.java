@@ -34,7 +34,6 @@ public class ProjectsPage extends Page {
                 pdMap.put("location",pd.location);
                 pdMap.put("time", pd.time);
                 pdMap.put("description", pd.description);
-                pdMap.put("imageData",pd.image);
                 pdMap.put("uid", pd.uid);
                 list.add(pdMap);
             }

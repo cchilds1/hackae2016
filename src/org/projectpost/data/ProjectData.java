@@ -9,7 +9,6 @@ public class ProjectData {
     public int location;
     public String time;
     public String description;
-    public String image;
     public int maxFunds;
     public int currentFunds;
 }

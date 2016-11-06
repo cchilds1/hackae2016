@@ -24,7 +24,6 @@ public class Database {
                 "location int NOT NULL," +
                 "time text NOT NULL," +
                 "description text NOT NULL," +
-                "image text NOT NULL," +
                 "maxFunds int NOT NULL," +
                 "currentFunds int NOT NULL" +
                 ")"
@@ -113,9 +112,8 @@ public class Database {
         pd.location = rs.getInt(4);
         pd.time = rs.getString(5);
         pd.description = rs.getString(6);
-        pd.image = rs.getString(7);
-        pd.maxFunds = rs.getInt(8);
-        pd.currentFunds = rs.getInt(9);
+        pd.maxFunds = rs.getInt(7);
+        pd.currentFunds = rs.getInt(8);
 
         rs.close();
 
@@ -124,7 +122,7 @@ public class Database {
 
     public static void saveProjectData(ProjectData pd) throws SQLException {
         String sql = "INSERT OR REPLACE INTO projects VALUES (" +
-                "?, ?, ?, ?, ?, ?, ?, ?, ?" +
+                "?, ?, ?, ?, ?, ?, ?, ?" +
                 ")";
         PreparedStatement stmt = connection.prepareStatement(sql);
         stmt.setString(1, pd.uid);
@@ -133,9 +131,8 @@ public class Database {
         stmt.setInt(4, pd.location);
         stmt.setString(5, pd.time);
         stmt.setString(6, pd.description);
-        stmt.setString(7, pd.image);
-        stmt.setInt(8, pd.maxFunds);
-        stmt.setInt(9, pd.currentFunds);
+        stmt.setInt(7, pd.maxFunds);
+        stmt.setInt(8, pd.currentFunds);
         stmt.execute();
     }
 
@@ -155,9 +152,8 @@ public class Database {
             pd.location = rs.getInt(4);
             pd.time = rs.getString(5);
             pd.description = rs.getString(6);
-            pd.image = rs.getString(7);
-            pd.maxFunds = rs.getInt(8);
-            pd.currentFunds = rs.getInt(9);
+            pd.maxFunds = rs.getInt(7);
+            pd.currentFunds = rs.getInt(8);
 
             projects.add(pd);
         }
