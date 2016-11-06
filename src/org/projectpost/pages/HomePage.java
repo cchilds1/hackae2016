@@ -19,6 +19,7 @@ public class HomePage extends Page {
 
     @Override
     public void getPage(HttpServletRequest req, HttpServletResponse resp, UserSession session) throws ServletException, IOException {
+        System.out.println("CALLING HOMEPAGE " + req.getRequestURI());
         try {
             Map<String, Object> homeMap = new HashMap<>();
             if (session.isLoggedIn()) {
