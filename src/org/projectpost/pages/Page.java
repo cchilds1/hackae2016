@@ -43,10 +43,11 @@ public abstract class Page extends DefaultHandler {
 
     @Override
     public NanoHTTPD.Response get(RouterNanoHTTPD.UriResource uriResource, Map<String, String> urlParams, NanoHTTPD.IHTTPSession session) {
-        return NanoHTTPD.newFixedLengthResponse(getPage(uriResource, urlParams, null));
+        return getPage(uriResource, urlParams, null);
     }
 
-    public abstract String getPage(RouterNanoHTTPD.UriResource uriResource, Map<String, String> urlParams, UserSession session);
+    public abstract NanoHTTPD.Response getPage(RouterNanoHTTPD.UriResource uriResource, Map<String, String> urlParams, UserSession session);
+
 
     public String renderTemplate(String name, Map<String, Object> info) throws IOException, TemplateException {
         Template t = Server.config.getTemplate(name);
