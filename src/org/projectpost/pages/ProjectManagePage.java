@@ -27,12 +27,10 @@ public class ProjectManagePage extends Page {
                 resp.sendRedirect("/");
                 return;
             }
-
             if (!session.getUID().equals(pd.owner)) {
                 resp.sendRedirect("/");
                 return;
             }
-
             List<VolunteerData> volunteerDatas = Database.getVolunteerDataForProject(pd.uid);
             List<DonateData> donateDatas = Database.getDonateDataForProject(pd.uid);
 
