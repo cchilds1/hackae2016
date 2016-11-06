@@ -1,0 +1,26 @@
+ <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo"><img src = 
+      "../static/PolitiBate_Logo.png" ></a>
+      <!--Log In button -->
+      <div class="right">
+    <p> Welcome ${user}</p>
+    </div>
+
+
+      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+   <form method="POST" action="/login"><center><h1><center>Make an Account!</center></h1>
+        <table>
+        <tr> <td>Create an Account</td> </tr>
+        <tr> <td>Username</td><td><input type="text" name="username" size="20" value=""></td> </tr>
+        <tr> <td>Password</td><td><input type="password" name="password" size="20" value=""></td> </tr>
+        <tr> <td>Retype Password</td><td><input type="password" name="rpassword" size="20" value=""></td> </tr>
+        <tr><td><input type="submit" name="Submit" value="Create!" class="btn-large waves-effect waves-light red"></td> </tr>
+        </table></center><br>
+    <form method="POST" action ="/politibate"><center><h2><center> Log In! </center></h2>
+        <table>
+            <tr> <td>Log in to your account</td></tr>
+            <tr> <td>Username</td><td><input type="text" name="username" size="20" value=""></td> </tr>
+            <tr> <td>Password</td><td><input type="password" name="password" size="20" value=""></td> </tr>
+            <tr> <td><input type="submit" name="Submit" value="Login" class="btn-large waves-effect waves-light red"></td> </tr>
+            </table></center></form></body>
