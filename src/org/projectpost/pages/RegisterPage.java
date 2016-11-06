@@ -68,6 +68,7 @@ public class RegisterPage extends Page {
             ud.username = username;
             MessageDigest md = MessageDigest.getInstance("MD5");
             ud.passhash = new String(md.digest(password.getBytes()));
+            Database.saveUserData(ud);
             return newRedirectResponse("/");
         } catch (
                 Exception e)
