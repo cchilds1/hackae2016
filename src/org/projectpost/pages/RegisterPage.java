@@ -8,6 +8,7 @@ import org.projectpost.sessions.UserSession;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.HashMap;
@@ -68,7 +69,7 @@ public class RegisterPage extends Page {
             ud.address = zipcode;
             ud.username = username;
             MessageDigest md = MessageDigest.getInstance("MD5");
-            ud.passhash = new String(md.digest(password.getBytes()));
+            ud.passhash = DatatypeConverter.printHexBinary(md.digest(password.getBytes()));
             Database.saveUserData(ud);
 
             resp.sendRedirect("/");

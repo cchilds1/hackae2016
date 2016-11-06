@@ -22,12 +22,11 @@ public class HomePage extends Page {
         try {
             Map<String, Object> homeMap = new HashMap<>();
             if (session.isLoggedIn()) {
+                System.out.println(session.getUID());
                 UserData ud = Database.getUserData(session.getUID());
-                homeMap.put("user", new HashMap<String, Object>() {
-                    {
-                        put("name", ud.username);
-                    }
-                });
+                HashMap<String, Object> userMap = new HashMap<>();
+                userMap.put("name", ud.name);
+                homeMap.put("user", userMap);
             }
 
             renderTemplate("Home.html", homeMap, resp.getWriter());

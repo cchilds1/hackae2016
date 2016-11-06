@@ -43,6 +43,7 @@ public abstract class Page extends HttpServlet {
         try {
             userID = Database.getSessionUserUid(sessionID);
         } catch (SQLException e) {
+            e.printStackTrace();
         }
         return new UserSession(userID);
     }

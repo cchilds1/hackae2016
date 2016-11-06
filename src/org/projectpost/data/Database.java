@@ -20,6 +20,7 @@ public class Database {
         execute("CREATE TABLE IF NOT EXISTS projects (" +
                 "uid char(32) PRIMARY KEY NOT NULL," +
                 "name text NOT NULL," +
+                "owner char(32) NOT NULL," +
                 "location int NOT NULL," +
                 "time text NOT NULL," +
                 "description text NOT NULL," +
@@ -70,6 +71,12 @@ public class Database {
                 "user char(32) NOT NULL" +
                 ")"
         );
+
+        String sql = "SELECT username FROM users";
+        ResultSet rs = connection.createStatement().executeQuery(sql);
+        while (rs.next()) {
+            System.out.println(rs.getString(1));
+        }
     }
 
     private static void execute(String s) throws SQLException {
@@ -78,7 +85,9 @@ public class Database {
     }
 
     private static String genUID() {
-        return UUID.randomUUID().toString().replaceAll("/", "");
+        String uid = UUID.randomUUID().toString().replaceAll("-", "");
+
+        return uid;
     }
 
     public static ProjectData newProjectData() {
@@ -453,9 +462,11 @@ public class Database {
             return null;
         }
 
+        String uid = rs.getString(2);
+
         rs.close();
 
-        return rs.getString(1);
+        return uid;
     }
 
 

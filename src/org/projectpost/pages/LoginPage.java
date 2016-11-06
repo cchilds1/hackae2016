@@ -7,6 +7,7 @@ import org.projectpost.sessions.UserSession;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.HashMap;
@@ -17,7 +18,7 @@ public class LoginPage extends Page {
     private boolean checkHashPass(String typedPassword, String storedPassHash){
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
-            return MessageDigest.isEqual(md.digest(typedPassword.getBytes()), storedPassHash.getBytes());
+            return MessageDigest.isEqual(md.digest(typedPassword.getBytes()), DatatypeConverter.parseHexBinary(storedPassHash));
         }catch (Exception e){
             return false;
         }
@@ -50,6 +51,7 @@ public class LoginPage extends Page {
                 errorMap.put("errorMessage","Invalid Username Or Password");
                 renderTemplate("login.html", errorMap, resp.getWriter());
             }else {
+                System.out.println("Uid of new session user: " + ud.uid);
                 String id = Database.newSession(ud.uid);
                 setCookieValue(resp, "postSession", id, 180000);
                 resp.sendRedirect("/");

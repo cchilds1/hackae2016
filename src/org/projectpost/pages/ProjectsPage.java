@@ -35,12 +35,13 @@ public class ProjectsPage extends Page {
                 pdMap.put("time", pd.time);
                 pdMap.put("description", pd.description);
                 pdMap.put("imageData",pd.image);
+                pdMap.put("uid", pd.uid);
                 list.add(pdMap);
             }
-            projectsMap.put("pdList", list);
+            projectsMap.put("projects", list);
             renderTemplate("projects.html", projectsMap, resp.getWriter());
         }catch(Exception e){
-            sendError(resp, "failed to read template");
+            sendError(resp, "failed to read template: " + e.getMessage());
         }
     }
 

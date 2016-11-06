@@ -20,7 +20,7 @@
       <!--Log In button -->
       <div class="right">
     <#if user??>
-  <p> Welcome ${user}</p>
+  <p> Welcome, ${user.name}!</p>
     <#else>
     <a href="./login" id="download-button" class="btn-large waves-effect waves-light red">Log In</a>
       <a href="./register" id="download-button" class="btn-large waves-effect waves-light red"> Register </a>
@@ -28,7 +28,6 @@
     </div>
     </div>
   </nav>
-  <body>
     <div id="change" style="height:50px;" class="span12"><center>
     Project Post
     </center></div> 

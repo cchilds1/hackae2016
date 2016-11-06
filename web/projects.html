@@ -15,8 +15,8 @@
   }
   </style>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="./css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-  <link href="./css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
 <body style="background-color:PeachPuff;">
   <nav class="orange accent-1" role="navigation" >
@@ -25,7 +25,7 @@
     </div>
   </nav><br><br><ul>
 <#list projects as project>
-  <li>${projectName}  needs help from ${time} at ${location}
+  <li><a href="/project/?pid=${project.uid}">${project.title}</a></li>
 </#list> 
 </ul>
 <footer class="page-footer orange accent-2">

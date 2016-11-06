@@ -23,49 +23,51 @@ public class CreatePage extends Page {
         try {
             renderTemplate("create.html", new HashMap<>(), resp.getWriter());
         } catch (TemplateException e) {
-            sendError(resp, "Failed to create template");
+            sendError(resp, "Failed to create template: " + e.getMessage());
         }
     }
 
     @Override
     public void postPage(HttpServletRequest req, HttpServletResponse resp, UserSession session) throws ServletException, IOException {
-        if (session.isLoggedIn()) {
+        if (!session.isLoggedIn()) {
             resp.sendRedirect("/");
             return;
         }
 
         try {
             String name = req.getParameter("name");
-            String owner = req.getParameter("owner");
             int location  = Integer.parseInt( req.getParameter("location") );
             String time = req.getParameter("time");
             String description = req.getParameter("description");
             String image = req.getParameter("image");
             int maxFunds = Integer.parseInt( req.getParameter("maxFunds") );
 
-            if (name.equals("") || owner.equals("") || location == 0 || time.equals("") || image.equals("") || maxFunds <= 0) {
+            if (name.equals("") || location == 0 || time.equals("") || image.equals("") || maxFunds <= 0) {
                 try {
                     Map<String, Object> errorMap = new HashMap<>();
                     errorMap.put("errorMessage", "Some fields were left blank!");
                     renderTemplate("register.html", errorMap, resp.getWriter());
                 } catch (TemplateException e) {
-                    sendError(resp, "Failed to create template");
+                    e.printStackTrace();;
+                    sendError(resp, "Failed to create template: " + e.getMessage());
                 }
             }
 
             ProjectData pd = Database.newProjectData();
             pd.name = name;
-            pd.owner = owner;
+            pd.owner = session.getUID();
             pd.location = location;
             pd.time = time;
             pd.description = description;
             pd.currentFunds = 0;
             pd.maxFunds = maxFunds;
+            pd.image = image;
 
             Database.saveProjectData(pd);
-            resp.sendRedirect("/");
+            resp.sendRedirect("/projects");
         } catch (Exception e) {
-            sendError(resp, "Failed to create template");
+            e.printStackTrace();
+            sendError(resp, "Failed to create template: " + e.getMessage());
         }
     }
 }
