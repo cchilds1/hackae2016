@@ -3,6 +3,8 @@ package org.projectpost.data;
 import javafx.geometry.Pos;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Database {
@@ -55,8 +57,10 @@ public class Database {
 
         execute("CREATE TABLE IF NOT EXISTS postcards (" +
                 "uid char(36) PRIMARY KEY NOT NULL," +
-                "donation char(36) NOT NULL," +
-                "message text NOT NULL," +
+                "fromUser char(36) NOT NULL," +
+                "toUser char(36) NOT NULL," +
+                "project char(36) NOT NULL," +
+                "message char(36) NOT NULL," +
                 ")"
         );
 
@@ -282,8 +286,10 @@ public class Database {
 
         PostcardData pd = new PostcardData();
         pd.uid = rs.getString(1);
-        pd.donation = rs.getInt(2);
-        pd.message = rs.getString(3);
+        pd.fromUser = rs.getString(2);
+        pd.toUser = rs.getString(3);
+        pd.project = rs.getString(4);
+        pd.message = rs.getString(5);
 
         return pd;
     }
@@ -294,10 +300,34 @@ public class Database {
                 ")";
         PreparedStatement stmt = connection.prepareStatement(sql);
         stmt.setString(1, pd.uid);
-        stmt.setInt(2, pd.donation);
-        stmt.setString(3, pd.message);
+        stmt.setString(2, pd.fromUser);
+        stmt.setString(3, pd.toUser);
+        stmt.setString(4, pd.project);
+        stmt.setString(5, pd.message);
         stmt.execute();
     }
+
+    public static List<PostcardData> getPostcardsForUser(String uid) throws SQLException {
+        List<PostcardData> postcards = new ArrayList<>();
+
+        String sql = "SELECT * FROM postcards WHERE toUser=?";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            PostcardData pd = new PostcardData();
+            pd.uid = rs.getString(1);
+            pd.fromUser = rs.getString(2);
+            pd.toUser = rs.getString(3);
+            pd.project = rs.getString(4);
+            pd.message = rs.getString(5);
+
+            postcards.add(pd);
+        }
+
+        return postcards;
+    }
+
 
 
     public static String newSession(String uid) throws SQLException {
@@ -327,6 +357,7 @@ public class Database {
 
         return rs.getString(1);
     }
+
 
 }
 
