@@ -59,6 +59,12 @@ public class Database {
                 "message text NOT NULL," +
                 ")"
         );
+
+        execute("CREATE TABLE IF NOT EXISTS sessions (" +
+                "uid char(32) PRIMARY KEY NOT NULL," +
+                "user char(36) NOT NULL," +
+                ")"
+        );
     }
 
     private static void execute(String s) throws SQLException {
@@ -154,6 +160,39 @@ public class Database {
         stmt.setString(6, ud.phoneNumber);
         stmt.setString(7, ud.address);
         stmt.execute();
+    }
+
+    public static boolean userExists(String uname) throws SQLException {
+        String sql = "SELECT EXISTS(SELECT 1 FROM users WHERE username=? LIMIT 1)";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setString(1, uname);
+        ResultSet rs = stmt.executeQuery();
+        rs.next();
+
+        int exists = rs.getInt(1);
+
+        return exists == 1;
+    }
+
+    public static UserData getUserByUsername(String name) throws SQLException {
+        String sql = "SELECT * FROM users WHERE username = ?";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+
+        if (!rs.next()) {
+            return null;
+        }
+
+        UserData ud = new UserData();
+        ud.uid = rs.getString(1);
+        ud.name = rs.getString(2);
+        ud.username = rs.getString(3);
+        ud.passhash = rs.getString(4);
+        ud.email = rs.getString(5);
+        ud.phoneNumber = rs.getString(6);
+        ud.address = rs.getString(7);
+
+        return ud;
     }
 
 
@@ -259,5 +298,7 @@ public class Database {
         stmt.setString(3, pd.message);
         stmt.execute();
     }
+
+
 }
 
