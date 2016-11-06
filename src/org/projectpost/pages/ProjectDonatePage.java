@@ -28,8 +28,8 @@ public class ProjectDonatePage extends Page {
             donateMap.put("imageData",pd.image);
             String donateTemplate = renderTemplate("donate.html", donateMap);
             DonateData dd = Database.newDonateData();
-            dd.project = projectId;
             dd.user = session.getUID();
+            dd.project = projectId;
             dd.amount = 0;//later if possible
             Database.saveDonateData(dd);
             return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/html", donateTemplate);
