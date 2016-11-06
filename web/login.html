@@ -25,6 +25,9 @@
             <tr> <td class="header center red-text">Password</td><td><input type="password" name="password" size="20" value="" placeholder="Password"></td> </tr>
             <tr> <td class="header center red-text"><input type="submit" name="Submit" value="Login" class="btn-large waves-effect waves-light red"></td> </tr>
             </table></form>
+            <#if errorMessage??>
+              <p style="color:red">${errorMessage}</p>
+            </#if>
    <br></body>
 
 <footer class="page-footer orange accent-2">
