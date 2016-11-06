@@ -300,7 +300,7 @@ public class Database {
     }
 
 
-    public static void newSession(String uid) throws SQLException {
+    public static String newSession(String uid) throws SQLException {
         String sql = "INSERT INTO sessions VALUES (" +
                 "?, ?" +
                 ")";
@@ -312,6 +312,7 @@ public class Database {
         stmt.setString(1, newUID);
         stmt.setString(2, uid);
         stmt.execute();
+        return newUID;
     }
 
 }

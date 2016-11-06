@@ -45,6 +45,8 @@ public class LoginPage extends Page {
                 String loginTemplate = renderTemplate("login.html", errorMap);
                 return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/html", loginTemplate);
             }else {
+                String id = Database.newSession(ud.uid);
+                session.getSession().getCookies().set("postSession",id,180000);
                 return newRedirectResponse("/");
             }
         } catch (Exception e) {
