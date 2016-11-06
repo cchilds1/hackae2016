@@ -24,7 +24,7 @@ public class ProjectDonatePage extends Page {
                 return newRedirectResponse("/");
             }
             Map<String, Object> donateMap = new HashMap<>();
-            donateMap.put("projectName",pd.name);// if we have time add the amount
+            donateMap.put("title",pd.name);// if we have time add the amount
             donateMap.put("imageData",pd.image);
             String donateTemplate = renderTemplate("donate.html", donateMap);
             DonateData dd = Database.newDonateData();

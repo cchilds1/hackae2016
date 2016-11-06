@@ -28,7 +28,6 @@ public class ProjectVolunteerPage extends Page {
             String volunteerTemplate = renderTemplate("volunteer.html", volunteerMap);
             VolunteerData vd = Database.newVolunteerData();
             String username = urlParams.get("username");
-            String
             vd.user = session.getUID();
             vd.project = projectId;
             Database.saveVolunteerData(vd);
