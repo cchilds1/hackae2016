@@ -1,6 +1,7 @@
 package org.projectpost.data;
 
 import javafx.geometry.Pos;
+import sun.plugin.perf.PluginRollup;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -104,6 +105,8 @@ public class Database {
         pd.maxFunds = rs.getInt(8);
         pd.currentFunds = rs.getInt(9);
 
+        rs.close();
+
         return pd;
     }
 
@@ -122,6 +125,34 @@ public class Database {
         stmt.setInt(8, pd.maxFunds);
         stmt.setInt(9, pd.currentFunds);
         stmt.execute();
+    }
+
+    public static List<ProjectData> getProjectsByUser(String userID) throws SQLException {
+        List<ProjectData> projects = new ArrayList<>();
+
+        String sql = "SELECT * FROM projects WHERE owner = ?";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setString(1, userID);
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            ProjectData pd = new ProjectData();
+            pd.uid = rs.getString(1);
+            pd.name = rs.getString(2);
+            pd.owner = rs.getString(3);
+            pd.location = rs.getInt(4);
+            pd.time = rs.getString(5);
+            pd.description = rs.getString(6);
+            pd.image = rs.getString(7);
+            pd.maxFunds = rs.getInt(8);
+            pd.currentFunds = rs.getInt(9);
+
+            projects.add(pd);
+        }
+
+        rs.close();
+
+        return projects;
     }
 
 
@@ -147,6 +178,8 @@ public class Database {
         ud.email = rs.getString(5);
         ud.phoneNumber = rs.getString(6);
         ud.address = rs.getString(7);
+
+        rs.close();
 
         return ud;
     }
@@ -175,12 +208,15 @@ public class Database {
 
         int exists = rs.getInt(1);
 
+        rs.close();
+
         return exists == 1;
     }
 
     public static UserData getUserByUsername(String name) throws SQLException {
         String sql = "SELECT * FROM users WHERE username = ?";
         PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setString(1, name);
         ResultSet rs = stmt.executeQuery();
 
         if (!rs.next()) {
@@ -195,6 +231,8 @@ public class Database {
         ud.email = rs.getString(5);
         ud.phoneNumber = rs.getString(6);
         ud.address = rs.getString(7);
+
+        rs.close();
 
         return ud;
     }
@@ -218,6 +256,8 @@ public class Database {
         vd.uid = rs.getString(1);
         vd.user = rs.getString(2);
         vd.project = rs.getString(3);
+
+        rs.close();
 
         return vd;
     }
@@ -253,6 +293,8 @@ public class Database {
         dd.user = rs.getString(2);
         dd.project = rs.getString(3);
         dd.amount = rs.getInt(4);
+
+        rs.close();
 
         return dd;
     }
@@ -291,6 +333,8 @@ public class Database {
         pd.project = rs.getString(4);
         pd.message = rs.getString(5);
 
+        rs.close();
+
         return pd;
     }
 
@@ -312,6 +356,7 @@ public class Database {
 
         String sql = "SELECT * FROM postcards WHERE toUser=?";
         PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setString(1, uid);
         ResultSet rs = stmt.executeQuery();
 
         while (rs.next()) {
@@ -324,6 +369,8 @@ public class Database {
 
             postcards.add(pd);
         }
+
+        rs.close();
 
         return postcards;
     }
@@ -354,6 +401,8 @@ public class Database {
         if (!rs.next()) {
             return null;
         }
+
+        rs.close();
 
         return rs.getString(1);
     }

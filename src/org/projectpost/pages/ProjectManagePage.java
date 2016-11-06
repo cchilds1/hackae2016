@@ -6,10 +6,10 @@ import org.projectpost.sessions.UserSession;
 
 import java.util.Map;
 
-public class ProjectsPage extends Page {
+public class ProjectManagePage extends Page {
     @Override
     public NanoHTTPD.Response getPage(RouterNanoHTTPD.UriResource uriResource, Map<String, String> urlParams, UserSession session) {
-        
+        return null;
     }
 
     @Override
