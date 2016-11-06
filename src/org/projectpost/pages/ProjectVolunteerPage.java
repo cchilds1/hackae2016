@@ -3,6 +3,7 @@ package org.projectpost.pages;
 import org.eclipse.jetty.http.HttpStatus;
 import org.projectpost.data.Database;
 import org.projectpost.data.ProjectData;
+import org.projectpost.data.UserData;
 import org.projectpost.data.VolunteerData;
 import org.projectpost.sessions.UserSession;
 
@@ -36,8 +37,9 @@ public class ProjectVolunteerPage extends Page {
             Database.saveVolunteerData(vd);
 
             Map<String, Object> volunteerMap = new HashMap();
-            volunteerMap.put("username", pd.owner);
-            volunteerMap.put("projectName", pd.name);
+            UserData ud = Database.getUserData(pd.owner);
+            volunteerMap.put("ownerName", ud.name);
+            volunteerMap.put("title", pd.name);
             volunteerMap.put("location", pd.location);
             volunteerMap.put("time", pd.time);
             renderTemplate("volunteer.html", volunteerMap, resp.getWriter());
