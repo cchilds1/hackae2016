@@ -4,7 +4,9 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
   <title>Project Post</title>
-
+  <!-- FAVICON -->
+  <link rel="shortcut icon" href="./images/fabicon.png" type="image/x-icon">
+  <link rel="icon" href="./images/fabicon.png" type="image/x-icon">
   <!-- CSS  -->
   
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -17,10 +19,13 @@
       "./images/Logo.png" ></a>
       <!--Log In button -->
       <div class="right">
-    <!--if else split-->
-      <a href="http://www.lego.com" id="download-button" class="btn-large waves-effect waves-light red">Log In</a>
+    <#if user.name!>
+  <p> Welcome ${user}</p>
+    </#if>
+    <#else>
+    <a href="http://www.lego.com" id="download-button" class="btn-large waves-effect waves-light red">Log In</a>
       <a href="http://www.lego.com" id="download-button" class="btn-large waves-effect waves-light red"> Register </a>
-    <!--if else split-->
+    </#else>
     </div>
     </div>
   </nav>

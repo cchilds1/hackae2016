@@ -4,7 +4,9 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
   <title>Project Post</title>
-
+  <!-- FAVICON -->
+  <link rel="shortcut icon" href="./images/fabicon.png" type="image/x-icon">
+  <link rel="icon" href="./images/fabicon.png" type="image/x-icon">
   <!-- CSS  -->
   <style>
   img{
@@ -23,7 +25,7 @@
     </div>
   </nav><br><br>
   <ul>
-  <!--#list items as item>
+  <#list items as item>
     <#if item.isDonate>
       <li>You received a donation from ${item.fromName} of ${item.amount}
       <li> <form> 
@@ -33,7 +35,7 @@
     <#else> ${item.fromName} would like to vounteer for your project. They can be contacted at ${item.email} or ${item.phoneNumber}
   <li>${projectName} 
     </#else>
-</#list--> 
+</#list> 
 </ul>
 <footer class="page-footer orange accent-2">
     <div class="container">
