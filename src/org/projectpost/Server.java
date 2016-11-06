@@ -3,11 +3,12 @@ package org.projectpost;
 import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.router.RouterNanoHTTPD;
 import freemarker.template.Configuration;
-import org.projectpost.pages.HomePage;
-import org.projectpost.pages.LoginPage;
+import org.projectpost.data.Database;
+import org.projectpost.pages.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.DatagramPacket;
 
 public class Server extends RouterNanoHTTPD {
 
@@ -18,11 +19,13 @@ public class Server extends RouterNanoHTTPD {
         try {
             config = new Configuration(Configuration.VERSION_2_3_25);
 
-            config.setDirectoryForTemplateLoading(new File("web"));
+            config.setDirectoryForTemplateLoading(new File("."));
+
+            Database.init();
 
             Server s = new Server();
             s.start();
-        } catch (IOException ioe) {
+        } catch (Exception ioe) {
             System.err.println("Couldn't start server:\n" + ioe);
         }
     }
@@ -42,5 +45,14 @@ public class Server extends RouterNanoHTTPD {
 
         addRoute("/", HomePage.class);
         addRoute("/login", LoginPage.class);
+        addRoute("/create", CreatePage.class);
+        addRoute("/css/", CSSEndpoint.class);
+        addRoute("/images/", ImagesEndpoint.class);
+        addRoute("/projects/:id/donate", ProjectDonatePage.class);
+        addRoute("/projects/:id/manage", ProjectManagePage.class);
+        addRoute("/projects/:id", ProjectPage.class);
+        addRoute("/projects", ProjectsPage.class);
+        addRoute("/projects/:id/volunteer", ProjectVolunteerPage.class);
+        addRoute("/register", RegisterPage.class);
     }
 }

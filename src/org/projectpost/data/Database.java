@@ -17,7 +17,7 @@ public class Database {
     public static void init() throws SQLException {
         connection = DriverManager.getConnection(DATABASE_URL);
 
-        execute("CREATE TABLE IF NONE EXISTS projects (" +
+        execute("CREATE TABLE IF NOT EXISTS projects (" +
                 "uid char(32) PRIMARY KEY NOT NULL," +
                 "name text NOT NULL," +
                 "location int NOT NULL," +
@@ -44,7 +44,7 @@ public class Database {
         execute("CREATE TABLE IF NOT EXISTS volunteerPosts (" +
                 "uid char(32) PRIMARY KEY NOT NULL," +
                 "user char(32) NOT NULL," +
-                "project char(32) NOT NULL," +
+                "project char(32) NOT NULL" +
                 ")"
         );
 
@@ -52,7 +52,7 @@ public class Database {
                 "uid char(32) PRIMARY KEY NOT NULL," +
                 "user char(32) NOT NULL," +
                 "project char(32) NOT NULL," +
-                "amount int NOT NULL," +
+                "amount int NOT NULL" +
                 ")"
         );
 
@@ -61,13 +61,13 @@ public class Database {
                 "fromUser char(32) NOT NULL," +
                 "toUser char(32) NOT NULL," +
                 "project char(32) NOT NULL," +
-                "message char(32) NOT NULL," +
+                "message char(32) NOT NULL" +
                 ")"
         );
 
         execute("CREATE TABLE IF NOT EXISTS sessions (" +
                 "uid char(32) PRIMARY KEY NOT NULL," +
-                "user char(32) NOT NULL," +
+                "user char(32) NOT NULL" +
                 ")"
         );
     }
