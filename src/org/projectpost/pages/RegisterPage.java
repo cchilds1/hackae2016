@@ -47,6 +47,7 @@ public class RegisterPage extends Page {
             String name = req.getParameter("name");
 
 
+
             if (username.equals("") || password.equals("") || rpassword.equals("") || email.equals("") || phonenumber.equals("") || zipcode.equals("") || name.equals("")) {
                 errMap(resp, "Fill out all fields");
                 return;
@@ -73,6 +74,7 @@ public class RegisterPage extends Page {
             resp.sendRedirect("/");
         } catch (Exception e) {
             sendError(resp, "failed to read template");
+            e.printStackTrace();
         }
     }
 
