@@ -3,6 +3,7 @@ package org.projectpost.pages;
 import org.eclipse.jetty.http.HttpStatus;
 import org.projectpost.data.Database;
 import org.projectpost.data.ProjectData;
+import org.projectpost.data.UserData;
 import org.projectpost.sessions.UserSession;
 
 import javax.servlet.ServletException;
@@ -28,9 +29,11 @@ public class ProjectPage extends Page {
 
             Map<String, Object> projectMap = new HashMap<>();
             projectMap.put("title", pd.name);
-            projectMap.put("owner", pd.owner);
+            UserData ud = Database.getUserData(pd.owner);
+            projectMap.put("owner", ud.name);
             projectMap.put("imageData", pd.image);
             projectMap.put("description", pd.description);
+            projectMap.put("pid", pd.uid);
             renderTemplate("project.html", projectMap, resp.getWriter());
         } catch (Exception e) {
             sendError(resp, "failed to read template");

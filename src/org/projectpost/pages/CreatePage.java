@@ -6,8 +6,13 @@ import org.projectpost.data.ProjectData;
 import org.projectpost.sessions.UserSession;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+import javax.xml.bind.DatatypeConverter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +40,8 @@ public class CreatePage extends Page {
         }
 
         try {
+
+
             String name = req.getParameter("name");
             int location  = Integer.parseInt( req.getParameter("location") );
             String time = req.getParameter("time");
@@ -61,7 +68,6 @@ public class CreatePage extends Page {
             pd.description = description;
             pd.currentFunds = 0;
             pd.maxFunds = maxFunds;
-            pd.image = image;
 
             Database.saveProjectData(pd);
             resp.sendRedirect("/projects");
